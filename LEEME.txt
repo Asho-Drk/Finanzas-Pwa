@@ -1,0 +1,32 @@
+PWA - FINANZAS PERSONALES (Google Apps Script)
+
+IMPORTANTE
+Esta PWA es una carcasa instalable alojada en un sitio HTTPS. La aplicación financiera sigue ejecutándose dentro de un iframe desde Google Apps Script, por lo que no se cambia tu hoja de cálculo ni la lógica de ingresos/gastos.
+
+1. CONFIGURAR LA URL
+- Abre config.js.
+- Reemplaza PEGA_AQUI_LA_URL_DE_TU_APLICACION_APPS_SCRIPT por la URL de implementación de tu aplicación web de Apps Script.
+- Usa la URL terminada en /exec.
+- Guarda el archivo.
+
+2. VERIFICAR APPS SCRIPT
+Tu doGet() actual ya incluye:
+.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+Por tanto, no necesitas cambiar esa parte. Mantén el acceso de la implementación acorde con la privacidad de tus datos. No publiques información financiera para acceso público.
+
+3. PUBLICAR LOS ARCHIVOS EN HTTPS
+Debes alojar TODOS los archivos y la carpeta icons en un hosting HTTPS estático. Por ejemplo:
+- GitHub Pages: crea un repositorio, sube el contenido de esta carpeta a la raíz y activa Settings > Pages.
+- Firebase Hosting u otro hosting estático HTTPS también sirve.
+No abras index.html directamente desde el computador: el manifiesto y el service worker requieren HTTPS (o localhost para pruebas).
+
+4. INSTALAR
+- Android/Chrome: abre la dirección HTTPS publicada; usa el aviso Instalar aplicación si aparece, o menú ⋮ > Instalar aplicación / Añadir a pantalla de inicio.
+- iPhone/iPad: abre la dirección en Safari > botón Compartir > Añadir a pantalla de inicio. iOS no muestra el mismo aviso automático que Chrome.
+- Computador: en Chrome o Edge, usa el icono Instalar de la barra de direcciones o el menú del navegador.
+
+LIMITACIONES Y PRIVACIDAD
+- El service worker guarda únicamente la carcasa (archivos estáticos) de la PWA; no guarda datos financieros ni permite consultar/registrar movimientos sin Internet.
+- La información sigue almacenada en tu Google Sheets y las operaciones siguen dependiendo de Apps Script.
+- Algunos navegadores pueden restringir cookies o inicio de sesión de Google dentro de iframes. Si la pantalla de Google solicita iniciar sesión repetidamente o no carga, puede requerir un ajuste adicional de publicación/autenticación.
+- La PWA no oculta ni cambia los permisos de acceso de tu Apps Script. Mantén la implementación privada o restringida a tu cuenta cuando corresponda.

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0e1a">
+  <meta name="description" content="Aplicación personal para registrar y consultar ingresos y gastos.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mis Finanzas">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <title>Mis Finanzas</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; background: #0a0e1a; color: #e8f1ff; font-family: system-ui, sans-serif; }
+    body { overflow: hidden; }
+    #app { width: 100%; height: 100%; height: 100dvh; }
+    #finance-app { display: block; border: 0; width: 100%; height: 100%; background: #0a0e1a; }
+    #offline { display: none; padding: 2rem; text-align: center; }
+    noscript { display:block; padding:2rem; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <!-- La URL de tu aplicación de Apps Script se configura en config.js -->
+    <iframe id="finance-app" title="Aplicación de Finanzas Personales" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <section id="offline"><h2>Sin conexión</h2><p>Conéctate a Internet para abrir tus datos financieros. La aplicación necesita comunicarse con Google Sheets.</p></section>
+  </main>
+  <noscript>Activa JavaScript para utilizar Mis Finanzas.</noscript>
+  <script src="./config.js"></script>
+  <script>
+    (function () {
+      const frame = document.getElementById('finance-app');
+      const offline = document.getElementById('offline');
+      const url = window.FINANZAS_APPS_SCRIPT_URL;
+      if (!url || url.includes('PEGA_AQUI')) {
+        frame.style.display = 'none';
+        offline.style.display = 'block';
+        offline.innerHTML = '<h2>Falta configurar la aplicación</h2><p>Abre <strong>config.js</strong> y pega la URL de implementación de tu aplicación de Google Apps Script.</p>';
+        return;
+      }
+      frame.src = url;
+      window.addEventListener('online', () => { if (frame.src !== url) frame.src = url; });
+    })();
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(err => console.error('No se pudo registrar el service worker:', err)));
+    }
+  </script>
+</body>
+</html>
